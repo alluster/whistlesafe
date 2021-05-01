@@ -1,0 +1,48 @@
+{
+	"name": "dashboard-server",
+	"version": "1.0.0",
+	"scripts": {
+		"client": "cd client && npm run start",
+		"server": "nodemon server.js",
+		"dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+		"heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
+	},
+	"dependencies": {
+		"@appbaseio/reactivesearch": "^3.15.0",
+		"@fortawesome/fontawesome-svg-core": "^1.2.34",
+		"@fortawesome/free-brands-svg-icons": "^5.15.2",
+		"@fortawesome/free-solid-svg-icons": "^5.15.2",
+		"@fortawesome/react-fontawesome": "^0.1.14",
+		"axios": "^0.21.1",
+		"body-parser": "^1.19.0",
+		"contentful": "^7.15.2",
+		"dotenv": "^8.2.0",
+		"express": "^4.16.4",
+		"firebase": "^7.24.0",
+		"heroku-ssl-redirect": "0.0.4",
+		"i18next": "^19.9.0",
+		"i18next-browser-languagedetector": "^6.0.1",
+		"i18next-http-backend": "^1.1.0",
+		"intercom-react": "^1.0.0-alpha.6",
+		"mysql": "^2.18.1",
+		"react": "^16.14.0",
+		"react-animate-on-scroll": "^2.1.5",
+		"react-copy-to-clipboard": "^5.0.3",
+		"react-flexbox-grid": "^2.1.2",
+		"react-ga": "^3.3.0",
+		"react-i18next": "^11.8.8",
+		"react-intercom": "^1.0.15",
+		"react-markdown": "^5.0.3",
+		"react-router-dom": "^5.2.0",
+		"react-side-effect": "^2.1.1",
+		"react-spinners": "^0.10.6",
+		"react-world-flags": "^1.4.0",
+		"sql-template-strings": "^2.2.2",
+		"styled-components": "^5.2.1"
+	},
+	"devDependencies": {
+		"concurrently": "^4.0.1",
+		"nodemon": "^2.0.7",
+		"react-scripts": "^4.0.3"
+	}
+}
