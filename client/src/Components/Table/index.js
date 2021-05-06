@@ -82,7 +82,6 @@ const Table = () => {
 				
 			};
 		// :hover {
-		// 	background-color: lightpink;
 		// };
 		
 	`;
@@ -109,7 +108,6 @@ const Table = () => {
 		GetReports()
 
 		return () => {
-			GetReports()
 		}
 	}, [])
 

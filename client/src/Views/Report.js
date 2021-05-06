@@ -83,13 +83,14 @@ const Report = (props) => {
 		setIsLoading(true)
 		await axios.get('/api/report', {
 			params: {
-				id: id
+				reportId: id
 			}
 		})
 		.then(function (response) {
-			let data = response.data[0]
+			console.log(response.data)
+			let data = response.data
 			setReport(data)
-			setIsLoading(false)
+			// setIsLoading(false)
 	
 	
 		})
@@ -118,21 +119,25 @@ const Report = (props) => {
 					
 
 					<div>
-				<h4 style={{marginBottom: "30px" }} >Report ID: {report?.report_id}</h4> 
+				<h4 style={{marginBottom: "30px" }} >Report ID: {report?.reportId}</h4> 
 				{/* <h4 style={{marginBottom: "30px" }}>Password: {}</h4>  */}
 
 				<form>
+				<InputGroup>
+						<Label>Time of reporting</Label>
+						<Input disabled type="text" rows="10" placeholder="Time of reporting" value={report?.dateAdded}  />
+					</InputGroup>
 					<InputGroup>
 						<Label>Please describe your concern</Label>
 						<Input disabled type="text" rows="10" placeholder="Description" value={report?.report}  />
 					</InputGroup>
 					<InputGroup>
 						<Label>When did this happen?</Label>
-						<Input disabled type="text" placeholder="Time" value={report?.date_added}  />
+						<Input disabled type="text" placeholder="Time" value={report?.occurTime}  />
 					</InputGroup>
 					<InputGroup>
 						<Label>Please provide any important details</Label>
-						<Input disabled type="text" placeholder="Details" value={report?.report_description} />
+						<Input disabled type="text" placeholder="Details" value={report?.reportDetails} />
 					</InputGroup>
 			
 					

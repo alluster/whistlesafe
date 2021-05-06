@@ -7,12 +7,18 @@ const bodyParser = require('body-parser')
 const path = require('path')
 const mysql = require('mysql');
 const SQL = require('sql-template-strings')
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr(process.env.REACT_APP_CRYPTO);
+
+
 const axios = require('axios').default;
 app.use(sslRedirect());
 app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
-  extended: true
+	extended: true
 }));
 
 const pool = mysql.createPool({
@@ -22,12 +28,14 @@ const pool = mysql.createPool({
 	database: process.env.REACT_APP_DATABASE
 });
 
+
+
+
 app.get('/api/reports', (req, res) => {
 	pool.getConnection(function(err, connection) {
 		if (err) throw err; 
-		query = SQL`SELECT * FROM reports WHERE org_id=${req.query.orgId}`
 		connection.query(
-			query,
+			"SELECT * FROM reports WHERE org_id = ?", [req.query.orgId],
 			function (error, results, fields) {
 				res.send(results)
 				connection.release();
@@ -36,20 +44,37 @@ app.get('/api/reports', (req, res) => {
 		);
 	});
 });
+
 app.get('/api/report', (req, res) => {
 	pool.getConnection(function(err, connection) {
 		if (err) throw err; 
-		query = SQL`SELECT * FROM reports WHERE report_id=${req.query.id}`
 		connection.query(
-			query,
+			"SELECT * FROM reports WHERE report_id= ?", [req.query.reportId], 
 			function (error, results, fields) {
-				res.send(results)
+				const dateAdded = results[0].date_added;
+				const decryptedReportDetails = cryptr.decrypt(results[0].report_details);
+				const decryptedReport = cryptr.decrypt(results[0].report);
+				const reportId = results[0].report_id;
+				const occurTime = results[0].occur_time;
+				const state = results[0].state;
+
+				res.send({
+					"dateAdded": dateAdded,
+					"reportDetails": decryptedReportDetails,
+					"report": decryptedReport,
+					"reportId": reportId,
+					"occurTime": occurTime,
+					"state": state
+					
+				})
+				console.log()
 				connection.release();
 				if (error) throw error;
 			}
 		);
 	});
 });
+
 app.get('/api/organisation', (req, res) => {
 	  axios.request({
 		method: 'GET',
@@ -71,10 +96,11 @@ app.get('/api/organisation', (req, res) => {
 
 
 
-  app.get('/api', (req, res) => {
-	  res.send("API working");
-	  
-  });
+
+app.get('/api', (req, res) => {
+	res.send("API working");
+	
+});
 app.get('*', (req,res) =>{
     res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
