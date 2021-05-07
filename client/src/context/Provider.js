@@ -30,7 +30,6 @@ const Provider = ({ children }) => {
 		}
 	}
 	useEffect(() => {
-		// if(isLoading) {setTimeout(function(){ window.location.reload(); }, 3000);}
 		return () => {
 			
 		}

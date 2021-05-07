@@ -1,20 +1,14 @@
-import React, { Suspense, useEffect } from 'react';
-import {
-	BrowserRouter as Router,
-	Switch,
-	Route
-} from 'react-router-dom';
+import React, { Suspense, useEffect, useContext } from 'react';
 import Container from '../Components/Container';
-import axios from 'axios';
-
-import Profile from './Profile';
+import { AppContext } from '../context/Context';
 const Table = React.lazy(() => import('../Components/Table'));
 const Spinner = React.lazy(() => import('../Components/Spinner'));
 
 
 const Home = () => {
-	
+	const { GetOrg } = useContext(AppContext);
 	useEffect(() => {
+		GetOrg()
 		return () => {
 		}
 	}, [])

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import axios from 'axios'
@@ -48,14 +48,12 @@ const Card = styled.div `
 	margin-right: auto;
 	margin-left: auto;
 	margin-top: 40px
-	width: 100%;
 	border-radius: 16px;
 	padding: 20px;
 	border: 1px solid #F4F4F4;
 	-webkit-box-shadow: 0px 5px 13px 1px rgba(216,216,216,0.26); 
 	box-shadow: 0px 5px 13px 1px rgba(216,216,216,0.26);
 	@media ${device.laptop} {
-		width: 100%;
 
 	}
 		
@@ -74,6 +72,7 @@ const CardContent = styled.div `
 
 
 const Report = (props) => {
+	const { GetOrg } = useContext(AppContext);
 
 	const [IsLoading, setIsLoading] = useState(false);
 	const [report, setReport] = useState()
@@ -87,7 +86,6 @@ const Report = (props) => {
 			}
 		})
 		.then(function (response) {
-			console.log(response.data)
 			let data = response.data
 			setReport(data)
 			setIsLoading(false)
@@ -103,7 +101,8 @@ const Report = (props) => {
 	}
 	
 	useEffect(() => {
-		GetReport()
+		GetReport();
+		GetOrg();
 		return () => {
 		}
 	}, [])
