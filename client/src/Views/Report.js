@@ -90,7 +90,7 @@ const Report = (props) => {
 			console.log(response.data)
 			let data = response.data
 			setReport(data)
-			// setIsLoading(false)
+			setIsLoading(false)
 	
 	
 		})
