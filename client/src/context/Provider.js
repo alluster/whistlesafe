@@ -17,17 +17,29 @@ const Provider = ({ children }) => {
 					orgId: user.org_id
 				}
 			})
-				.then(function (response) {
-					let data = response.data
-					setOrgColor(data.branding.colors.primary)
-					setLogoUrl(data.branding.logo_url)
-				})
-				.catch(function (error) {
-					console.log(error);
-				})
-				.finally(function () {
-				});
+			.then(function (response) {
+				let data = response.data
+				try { setOrgColor(data.branding.colors.primary)} 
+					catch (error) {
+						setOrgColor("#000")
+					}
+				try { setLogoUrl(data.branding.logo_url)} 
+					catch (error) {
+						setLogoUrl("./logo-dark.svg")
+					}
+				
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.finally(function () {
+			});
 		}
+
+		
+
+
+
 	}
 	useEffect(() => {
 		return () => {
