@@ -12,9 +12,10 @@ import Spinner from '../Spinner';
 const ColorBar = React.lazy(() => import('../ColorBar'));
 
 const TopNav = () => {
-	const { isAuthenticated, user } = useAuth0();
-	const { GetOrg, orgColor } = useContext(AppContext);
-
+	const { isAuthenticated, user, isLoading } = useAuth0();
+	// const [orgColor, setOrgColor] = useState("#000")
+	const { orgColor, GetOrg } = useContext(AppContext);
+	
 	const Wrapper = styled.div`
 		display: flex;
 		flex-direction: row;

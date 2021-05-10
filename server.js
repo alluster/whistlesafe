@@ -76,18 +76,33 @@ app.get('/api/report', (req, res) => {
 });
 
 app.get('/api/organisation', (req, res) => {
-	  axios.request({
-		method: 'GET',
-		url: `${process.env.REACT_APP_DOMAIN}/api/v2/organizations/${req.query.orgId}`,
-		headers: {
-			authorization: "Bearer" + " " + process.env.REACT_APP_TOKEN
-		}
-	  }).then(function (response) {
-		res.send(response.data)
-	  }).catch(function (error) {
-		console.error(error);
-	  });
+	pool.getConnection(function(err, connection) {
+		if (err) throw err; 
+		
+		connection.query
+		("SELECT * FROM organisations WHERE org_id = ?", [req.query.orgId],
+			function (error, results, fields) {
+				res.send(results)
+				connection.release();
+				if (error) throw error;
+			}
+		);
+	});
 });
+
+// app.get('/api/organisation', (req, res) => {
+// 	  axios.request({
+// 		method: 'GET',
+// 		url: `${process.env.REACT_APP_DOMAIN}/api/v2/organizations/${req.query.orgId}`,
+// 		headers: {
+// 			authorization: "Bearer" + " " + process.env.REACT_APP_TOKEN
+// 		}
+// 	  }).then(function (response) {
+// 		res.send(response.data)
+// 	  }).catch(function (error) {
+// 		console.error(error);
+// 	  });
+// });
 
 
 

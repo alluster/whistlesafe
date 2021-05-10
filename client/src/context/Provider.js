@@ -7,25 +7,28 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 const Provider = ({ children }) => {
 	const { user, isAuthenticated, isLoading } = useAuth0();
-	const [orgColor, setOrgColor] = useState("#000")
-	const [logoUrl, setLogoUrl] = useState("./logo-dark.svg")
-	const [orgId, setOrgId] = useState()
+	const [orgColor, setOrgColor] = useState("#000");
+	const [logoUrl, setLogoUrl] = useState("./logo-dark.svg");
+	const [orgId, setOrgId] = useState();
 	const GetOrg = async () => {
-		if (!isLoading) {
-			await axios.get('/api/organisation', {
-				params: {
-					orgId: user.org_id
-				}
-			})
+		await axios.get('/api/organisation', {
+			params: {
+				orgId: user.org_id
+			}
+		})
 			.then(function (response) {
-				let data = response.data
-				try { setOrgColor(data.branding.colors.primary)} 
+				let data = response.data[0]
+				try { setOrgColor(data.org_color)} 
 					catch (error) {
 						setOrgColor("#000")
 					}
-				try { setLogoUrl(data.branding.logo_url)} 
+				try { setLogoUrl(data.logo_url)} 
 					catch (error) {
 						setLogoUrl("./logo-dark.svg")
+					}
+				try { setOrgId(data.org_id)} 
+					catch (error) {
+						setOrgId("")
 					}
 				
 			})
@@ -34,12 +37,6 @@ const Provider = ({ children }) => {
 			})
 			.finally(function () {
 			});
-		}
-
-		
-
-
-
 	}
 	useEffect(() => {
 		return () => {
