@@ -1,4 +1,4 @@
-# Whistlesafe.eu dashboard web app for EU whistleblowing direcive use
+# Whistlesafe.eu dashboard web app for EU whistleblowing directive use
 
 npm run dev  
 (concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"")
