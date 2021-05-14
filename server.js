@@ -1,25 +1,39 @@
 require('dotenv').config()
 const express = require('express');
 const app = express();
-const port = process.env.PORT || 5000;
 const sslRedirect = require('heroku-ssl-redirect');
 const bodyParser = require('body-parser')
 const path = require('path')
 const mysql = require('mysql');
-const SQL = require('sql-template-strings')
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr(process.env.REACT_APP_CRYPTO);
+const http = require("http").createServer(app);
 
-
-const axios = require('axios').default;
+const io = require("socket.io")(http, {
+	cors: {
+	  origin: process.env.REACT_APP_BASE_URL,
+	  methods: ["GET", "POST"],
+	  allowedHeaders: ["my-custom-header"],
+	  credentials: true
+	}
+  });
+  
 app.use(sslRedirect());
 app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({
 	extended: true
 }));
+
+io.on("connection", socket => {
+	socket.on("disconnect", () => {
+	  console.log("user disconnected");
+	});
+  
+	socket.on("message", message => {
+	  io.emit("message", message);
+	});
+  });
 
 const pool = mysql.createPool({
 	host: process.env.REACT_APP_DATABASE_HOST,
@@ -90,20 +104,6 @@ app.get('/api/organisation', (req, res) => {
 	});
 });
 
-// app.get('/api/organisation', (req, res) => {
-// 	  axios.request({
-// 		method: 'GET',
-// 		url: `${process.env.REACT_APP_DOMAIN}/api/v2/organizations/${req.query.orgId}`,
-// 		headers: {
-// 			authorization: "Bearer" + " " + process.env.REACT_APP_TOKEN
-// 		}
-// 	  }).then(function (response) {
-// 		res.send(response.data)
-// 	  }).catch(function (error) {
-// 		console.error(error);
-// 	  });
-// });
-
 
 
 
@@ -119,6 +119,6 @@ app.get('/api', (req, res) => {
 app.get('*', (req,res) =>{
     res.sendFile(path.join(__dirname+'/client/build/index.html'));
 });
-app.listen(process.env.PORT || 5000, 
+http.listen(process.env.PORT || 5000, 
 	() => console.log("Server is running..."));
 

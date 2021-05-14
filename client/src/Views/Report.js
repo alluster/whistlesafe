@@ -1,7 +1,8 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import axios from 'axios'
+import io from "socket.io-client";
 
 
 import { device } from '../device';
@@ -17,7 +18,7 @@ import {
 	Route,
 	Link,
 	useParams
-  } from "react-router-dom";
+} from "react-router-dom";
 import Container from '../Components/Container';
 
 const Input = styled.textarea`
@@ -42,7 +43,7 @@ const InputGroup = styled.div`
 
 `
 
-const Card = styled.div `
+const Card = styled.div`
 	min-height: 100%;
 	background-color: white;
 	margin-right: auto;
@@ -58,7 +59,7 @@ const Card = styled.div `
 	}
 		
 	`;
-const CardContent = styled.div `
+const CardContent = styled.div`
 	max-width: 400px;
 	margin-right: auto;
 	margin-left: auto;
@@ -71,12 +72,32 @@ const CardContent = styled.div `
 
 
 
-const Report = (props) => {
+const Report = () => {
 	const { GetOrg } = useContext(AppContext);
 
 	const [IsLoading, setIsLoading] = useState(false);
 	const [report, setReport] = useState()
+	const [message, setMessage] = useState("");
+	const [receivedMessages, setReceivedMessages] = useState([]);
+	const [date, setDate] = useState();
+
 	let { id } = useParams();
+	const socket = io(`${process.env.REACT_APP_API_URL}`, {
+		withCredentials: true,
+		extraHeaders: {
+			"my-custom-header": "abcd"
+		}
+	});
+
+	const sendMessage = () => {
+		socket.emit("message", ` ${message} - ${date}`);
+		setMessage("");
+	};
+
+	const onUpdateMessage = event => {
+		setDate(new Date());
+		setMessage(event.target.value);
+	};
 
 	const GetReport = async () => {
 		setIsLoading(true)
@@ -85,86 +106,101 @@ const Report = (props) => {
 				reportId: id
 			}
 		})
-		.then(function (response) {
-			let data = response.data
-			setReport(data)
-			setIsLoading(false)
-	
-	
-		})
-		.catch(function (error) {
-			console.log(error);
-		})
-		.finally(function () {
-			setIsLoading(false)
-		});
+			.then(function (response) {
+				let data = response.data
+				setReport(data)
+				setIsLoading(false)
+
+
+			})
+			.catch(function (error) {
+				console.log(error);
+			})
+			.finally(function () {
+				setIsLoading(false)
+			});
 	}
-	
+
 	useEffect(() => {
 		GetReport();
 		GetOrg();
+		socket.on("message", message => {
+			setReceivedMessages(prevState => [...prevState, message]);
+		});
+		console.log(receivedMessages)
 		return () => {
 		}
 	}, [])
 
 
-    return(
+	return (
 		<Container>
 			<Card>
 				<CardContent>
-				{
-					!IsLoading ?
+					{
+						!IsLoading ?
 
-					
 
-					<div>
-				<h4 style={{marginBottom: "30px" }} >Report ID: {report?.reportId}</h4> 
-				{/* <h4 style={{marginBottom: "30px" }}>Password: {}</h4>  */}
 
-				<form>
-				<InputGroup>
-						<Label>Time of reporting</Label>
-						<Input disabled type="text" rows="10" placeholder="Time of reporting" value={report?.dateAdded}  />
-					</InputGroup>
-					<InputGroup>
-						<Label>Please describe your concern</Label>
-						<Input disabled type="text" rows="10" placeholder="Description" value={report?.report}  />
-					</InputGroup>
-					<InputGroup>
-						<Label>When did this happen?</Label>
-						<Input disabled type="text" placeholder="Time" value={report?.occurTime}  />
-					</InputGroup>
-					<InputGroup>
-						<Label>Please provide any important details</Label>
-						<Input disabled type="text" placeholder="Details" value={report?.reportDetails} />
-					</InputGroup>
-			
-					
+							<div>
+								<h4 style={{ marginBottom: "30px" }} >Report ID: {report?.reportId}</h4>
+								{/* <h4 style={{marginBottom: "30px" }}>Password: {}</h4>  */}
 
-				
-				</form>
-					</div>
-					:
-					<Spinner />
-				}
-				
-					
+								<form>
+									<InputGroup>
+										<Label>Time of reporting</Label>
+										<Input disabled type="text" rows="10" placeholder="Time of reporting" value={report?.dateAdded} />
+									</InputGroup>
+									<InputGroup>
+										<Label>Please describe your concern</Label>
+										<Input disabled type="text" rows="10" placeholder="Description" value={report?.report} />
+									</InputGroup>
+									<InputGroup>
+										<Label>When did this happen?</Label>
+										<Input disabled type="text" placeholder="Time" value={report?.occurTime} />
+									</InputGroup>
+									<InputGroup>
+										<Label>Please provide any important details</Label>
+										<Input disabled type="text" placeholder="Details" value={report?.reportDetails} />
+									</InputGroup>
+									<InputGroup>
+										<Input style={{ marginBottom: "20px" }} type="text" value={message} onChange={onUpdateMessage} />
+										<Button onClick={sendMessage}>Send Message</Button>
+									</InputGroup>
+									<h3>Messages</h3>
 
-				
+									<InputGroup>
+										{receivedMessages.map((item, index) => (
+											<Input disabled key={index} value={item} type="text" />
+										))}
+									</InputGroup>
+
+
+
+
+								</form>
+							</div>
+							:
+							<Spinner />
+					}
+
+
+
+
 
 				</CardContent>
 
-				</Card>
+			</Card>
 		</Container>
-    );
+	);
 };
 
- Report.propTypes = {
-    props: PropTypes.oneOfType([
-        PropTypes.arrayOf(PropTypes.node),
-        PropTypes.node,
-        PropTypes.string
-    ])
- }
+Report.propTypes = {
+	props: PropTypes.oneOfType([
+		PropTypes.arrayOf(PropTypes.node),
+		PropTypes.node,
+		PropTypes.string
+	])
+}
 
 export default Report;
