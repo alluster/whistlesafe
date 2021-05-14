@@ -18,8 +18,7 @@ const Button = ({ onClick, children, className }) => {
 		padding-left: 20px;
 		border-radius: 4px;
 		background-color: ${orgColor}
-		@media ${device.laptop} {
-			
+		@media ${device.laptop} {	
 			}
 
 `;
