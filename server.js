@@ -9,6 +9,20 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr(process.env.REACT_APP_CRYPTO);
 const http = require("http").createServer(app);
 
+app.use(sslRedirect());
+app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+
+const pool = mysql.createPool({
+	host: process.env.REACT_APP_DATABASE_HOST,
+	user: process.env.REACT_APP_DATABASE_USERNAME,
+	password: process.env.REACT_APP_DATABASE_PASSWORD,
+	database: process.env.REACT_APP_DATABASE
+});
+
 const io = require("socket.io")(http, {
 	cors: {
 	  origin: process.env.REACT_APP_BASE_URL,
@@ -18,12 +32,7 @@ const io = require("socket.io")(http, {
 	}
   });
   
-app.use(sslRedirect());
-app.use(express.static(path.join(__dirname, 'client/build')));
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({
-	extended: true
-}));
+
 
 io.on("connection", socket => {
 	socket.on("disconnect", () => {
@@ -32,25 +41,51 @@ io.on("connection", socket => {
   
 	socket.on("message", message => {
 	  io.emit("message", message);
+	  pool.getConnection(function(err, connection) {
+		if (err) throw err; 
+		const encryptedMessage = cryptr.encrypt(message.message);
+		connection.query(
+			"INSERT INTO messages (message, report_id, date, author) VALUES (?, ?, ?, ?)", [encryptedMessage, message.reportId, message.date, message.author],
+			function (error) {
+				connection.release();
+				if (error) throw error;
+			}
+		);
+	});
 	});
   });
 
-const pool = mysql.createPool({
-	host: process.env.REACT_APP_DATABASE_HOST,
-	user: process.env.REACT_APP_DATABASE_USERNAME,
-	password: process.env.REACT_APP_DATABASE_PASSWORD,
-	database: process.env.REACT_APP_DATABASE
+
+
+
+app.get('/api/messages', (req, res) => {
+	pool.getConnection(function(err, connection) {
+		if (err) throw err; 
+
+		connection.query(
+			"SELECT * FROM messages WHERE report_id = ?", [req.query.reportId],
+			function (error, results) {
+				
+				res.send(results.map((item) =>  ({
+						message: cryptr.decrypt(item.message),
+						author: item.author, 
+						date: item.date
+					})
+					
+				))
+				connection.release();
+				if (error) throw error;
+			}
+		);
+	});
 });
-
-
-
 
 app.get('/api/reports', (req, res) => {
 	pool.getConnection(function(err, connection) {
 		if (err) throw err; 
 		connection.query(
 			"SELECT * FROM reports WHERE org_id = ?", [req.query.orgId],
-			function (error, results, fields) {
+			function (error, results) {
 				res.send(results)
 				connection.release();
 				if (error) throw error;
@@ -64,7 +99,7 @@ app.get('/api/report', (req, res) => {
 		if (err) throw err; 
 		connection.query(
 			"SELECT * FROM reports WHERE report_id= ?", [req.query.reportId], 
-			function (error, results, fields) {
+			function (error, results) {
 				const dateAdded = results[0].date_added;
 				const decryptedReportDetails = cryptr.decrypt(results[0].report_details);
 				const decryptedReport = cryptr.decrypt(results[0].report);
@@ -95,7 +130,7 @@ app.get('/api/organisation', (req, res) => {
 		
 		connection.query
 		("SELECT * FROM organisations WHERE org_id = ?", [req.query.orgId],
-			function (error, results, fields) {
+			function (error, results) {
 				res.send(results)
 				connection.release();
 				if (error) throw error;
@@ -103,13 +138,6 @@ app.get('/api/organisation', (req, res) => {
 		);
 	});
 });
-
-
-
-
-
-
-
 
 
 app.get('/api', (req, res) => {

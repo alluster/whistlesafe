@@ -73,24 +73,49 @@ const CardContent = styled.div`
 
 
 const Report = () => {
-	const { GetOrg } = useContext(AppContext);
+	const { GetOrg, user } = useContext(AppContext);
 
-	const [IsLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 	const [report, setReport] = useState()
 	const [message, setMessage] = useState("");
 	const [receivedMessages, setReceivedMessages] = useState([]);
 	const [date, setDate] = useState();
-
 	let { id } = useParams();
 	const socket = io(`${process.env.REACT_APP_API_URL}`, {
 		withCredentials: true,
-		extraHeaders: {
-			"my-custom-header": "abcd"
-		}
+		
 	});
+	const GetMessages = async () => {
+		setIsLoading(true)
+		if (!isLoading) {
+			await axios.get('/api/messages', {
+				params: {
+					reportId: id
+				}
+			})
+				.then(function (response) {
+					let data = response.data
+					setReceivedMessages(data)
+					setIsLoading(false)
 
+
+				})
+				.catch(function (error) {
+					console.log(error);
+				})
+				.finally(function () {
+					setIsLoading(false)
+				});
+		}
+
+	}
 	const sendMessage = () => {
-		socket.emit("message", ` ${message} - ${date}`);
+		socket.emit("message", {
+			message: message,
+			date: date,
+			reportId: id,
+			author: user ? "Report handler" : "Reporter"
+		});
 		setMessage("");
 	};
 
@@ -124,6 +149,7 @@ const Report = () => {
 	useEffect(() => {
 		GetReport();
 		GetOrg();
+		GetMessages();
 		socket.on("message", message => {
 			setReceivedMessages(prevState => [...prevState, message]);
 		});
@@ -138,7 +164,7 @@ const Report = () => {
 			<Card>
 				<CardContent>
 					{
-						!IsLoading ?
+						!isLoading ?
 
 
 
@@ -171,7 +197,12 @@ const Report = () => {
 
 									<InputGroup>
 										{receivedMessages.map((item, index) => (
-											<Input disabled key={index} value={item} type="text" />
+											<div key={index}>
+												<p>{item.author}</p>
+												<p>{item.date}</p>
+												<Input disabled  value={item.message} type="text" />
+
+											</div>
 										))}
 									</InputGroup>
 
