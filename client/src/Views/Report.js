@@ -196,7 +196,7 @@ const Report = () => {
 									<h3>Messages</h3>
 
 									<InputGroup>
-										{receivedMessages.map((item, index) => (
+										{receivedMessages.slice(0).reverse().map((item, index) => (
 											<div key={index}>
 												<p>{item.author}</p>
 												<p>{item.date}</p>
