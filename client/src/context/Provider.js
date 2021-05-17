@@ -11,6 +11,9 @@ const Provider = ({ children }) => {
 	const [logoUrl, setLogoUrl] = useState("./logo-dark.svg");
 	const [orgId, setOrgId] = useState();
 	const GetOrg = async () => {
+		if(user) {
+
+	
 		await axios.get('/api/organisation', {
 			params: {
 				orgId: user.org_id
@@ -37,7 +40,8 @@ const Provider = ({ children }) => {
 			})
 			.finally(function () {
 			});
-	}
+		}
+		}
 	useEffect(() => {
 		return () => {
 			
