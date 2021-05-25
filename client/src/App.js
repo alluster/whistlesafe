@@ -35,7 +35,7 @@ const App = () => {
 
 
 						<Switch>
-							<Route path="/followreport/:company" component={FollowReport} />
+							<Route path="/followreport" component={FollowReport} />
 							<PrivateRoute exact path="/" component={Home} />
 							<PrivateRoute path="/reports" component={Reports} />
 							<PrivateRoute path="/report/:id" component={Report} />
