@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Auth0Provider } from "@auth0/auth0-react";
+import './i18n';
+import GlobalStyle from './globalStyle';
 
 ReactDOM.render(
 	<React.StrictMode>
@@ -13,6 +15,8 @@ ReactDOM.render(
 			useRefreshTokens={true}
 			cacheLocation="localstorage"
 		>
+			<GlobalStyle />
+
 			<App />
 		</Auth0Provider>
 	</React.StrictMode>,

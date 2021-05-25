@@ -1,0 +1,122 @@
+{
+	"page": {
+		"home": {
+			"hero": {
+				"title": "Something on your mind?",
+				"ingress": "Whistlesafe is an anonymous EU Whistleblow directive compliant reporting service."
+			},
+			"search": {
+				"placeholder": "Search for your organisation",
+				"button": "Go to reporting:"
+
+			}
+		},
+		"company": {
+			"hero": {
+				"title": "Anonymous reporting channel",
+				"ingress": "Together we are committed for a safer, equal and transparent work environment. Safety and open culture is in the core of our work. We value respect and safety of everyone affected our business."
+			}
+		},
+		
+		"report": {
+			
+		}
+		
+		
+	},
+	"button": {
+		"register": "Register Now",
+		"sign-in": "Sign In",
+		"create-report": "Create new report",
+		"follow-report": "Follow my report",
+		"share": "Share in social media",
+		"send": "Send"
+	},
+	"input": {
+		"date-of-report": {
+			"label": "Date of reporting",
+			"placeholder": ""
+		},
+		"report": {
+			"label": "Please write your report",
+			"placeholder": "Report"
+		},
+		"time-of-occur": {
+			"label": "When did this happen?",
+			"placeholder": "Date and time"
+		},
+		"report-details": {
+			"label": "Please provide details",
+			"placeholder": "Details"
+		},
+		"login-id": {
+			"label": "Report ID",
+			"placeholder": "ID"
+		},
+		"login-password": {
+			"label": "Report password",
+			"placeholder": "Password"
+		}
+	
+	},
+	"banner": {
+		"intro": {
+			"title": "Our Whistleblowing service",
+			"ingress": "We are all committed to transparency and equality.",
+			"body": "Whistleblowing service can be used when you have concern about something that doesn't align with our company values, ethics or is legally suspicious or may affect someones health."
+		},
+		"private": {
+			"title": "Absolutely private and anonymous service.",
+			"ingress": "Whistleblow service is completely anonymous and no IP address, ID or email data is stored when a message is reported. All messages are handled with confidence and security.",
+			"body": "Whistleblow is an EU compliant service that matches requirements set by European Union for organisations with 50 employees or more. The Whistleblow service is not meant to use only by company employees but is accessible for all stakeholders that are engaged with our organisation."
+		},
+		"follow-up": {
+			"title": "Have you filed a message already?",
+			"ingress": "The progress of filed reports can be anonymously followed.",
+			"body": "You will be asked to provide message ID and password that was generated when your message was sent."
+		},
+		"create-report": {
+			"title": "Submit a new report",
+			"ingress": "You are about to submit a new report to Whistlesafe service",
+			"body": "Please fill the report form as accurately as you can. Please do not enter any information that can compromise your privacy. The report will be handled privately but we cannot guarantee your complete privacy in case of receiving identifiable information."
+		},
+		"follow-report": {
+			"title": "Your report",
+			"ingress": "You have submitted this report to the Whistlesafe service",
+			"body": "Please view your report and make sure all the information you have submitted is correct."
+		},
+		"report-chat": {
+			"title": "Chat with the report handler",
+			"ingress": "You can anonymously send messages to the handler of this report.",
+			"body": "Please note that you will not be informed in case a new message has arrived to the service due to security reasons. Please visit your report regularily."
+		},
+		"report-id-password": {
+			"title": "Please note",
+			"ingress": "In order to follow up your report save these credentials somewhere safe",
+			"body": "You will be asked to provide message ID and password that was generated when your message was sent. We do not provide new credentials however in case you loose these credentials you can submit a new report. Note that every time the browser is refreshed the ID and password will be changed. "
+		},
+		"login": {
+			"title": "Login",
+			"ingress": "Please login with credentials given when a report was submitted",
+			"body": "In case you have lost these credentials please file in a new report. We cannot provide you with new credentials."
+		}
+	},
+	
+	"notification": {
+		"already-member": "Already have an Account?",
+		"register": "Create a free user account and purchase from over 16 000 products",
+		"share": "Article copied to clipboard. Now you can paste it to social media!"
+	},		
+	"navigation": {
+		"landing-page": "Home" ,
+		"about-us": "About Us",
+		"buyers": "For Buyers",
+		"sellers": "For Sellers",
+		"privacy-policy": "Privacy Policy",
+		"suppiblog": "Suppiblog"
+	},
+	"product": {
+		"sales_unit_size": "Sales Unit Size",
+		"consumer_package_size": "Package Size"
+	}
+}

@@ -7,15 +7,28 @@ import { Link } from "react-router-dom";
 import { AppContext } from '../../context/Context';
 import { useAuth0 } from "@auth0/auth0-react";
 import Spinner from '../Spinner';
+import Flag from 'react-world-flags'
 
 
 const ColorBar = React.lazy(() => import('../ColorBar'));
+const LanguageSelector = styled.div`
+		display: flex;
+		justify-content:center;
+		align-items: center;
 
+`;
+	const StyledFlag = styled(Flag)`
+	max-height: 15px !important;
+	padding: 30px;
+	:hover{
+		cursor: pointer;
+	}
+`;
 const TopNav = () => {
 	const { isAuthenticated, user, isLoading } = useAuth0();
 	// const [orgColor, setOrgColor] = useState("#000")
-	const { orgColor, GetOrg } = useContext(AppContext);
-	
+	const { orgColor, GetOrg, setLang } = useContext(AppContext);
+
 	const Wrapper = styled.div`
 		display: flex;
 		flex-direction: row;
@@ -45,6 +58,11 @@ const TopNav = () => {
 		}
 
 	`
+	const LocaleSelector = (locale) => {
+		localStorage.setItem('lang', locale);
+		setLang(locale)
+		window.location.reload();
+	}
 	useEffect(() => {
 		GetOrg()
 		return () => {
@@ -69,14 +87,25 @@ const TopNav = () => {
 							</NavItem>
 						</Link>
 						<NavItem>
+							<LanguageSelector>
+								<StyledFlag code="fi" onClick={() => LocaleSelector("fi")} />
+								<StyledFlag code="gb" onClick={() => LocaleSelector("en-US")} />
+							</LanguageSelector>
+						</NavItem>
+						<NavItem>
 							<LogoutButton />
 						</NavItem>
-						
+
 					</Wrapper>
 
 					:
 					<Wrapper>
-
+						<NavItem>
+							<LanguageSelector>
+								<StyledFlag code="fi" onClick={() => LocaleSelector("fi")} />
+								<StyledFlag code="gb" onClick={() => LocaleSelector("en-US")} />
+							</LanguageSelector>
+						</NavItem>
 						<NavItem>
 							<LoginButton />
 						</NavItem>

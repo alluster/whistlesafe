@@ -2,14 +2,17 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { device } from '../../device';
 import { AppContext } from '../../context/Context';
-import {Link} from 'react-router-dom';
-import { useAuth0 } from "@auth0/auth0-react";
+import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
 	const { logoUrl } = useContext(AppContext)
-	const { user, isAuthenticated, isLoading } = useAuth0();
 
-	const Wrapper = styled.div `
+	const Container = styled.div`
+		height: 100%
+	`;
+
+	const Wrapper = styled.div`
+		height: 100% !important;
 		display: flex;
 		margin-left: 0px;
 		top: 0px;
@@ -18,7 +21,6 @@ const Sidebar = () => {
 		background-color: ${props => props.theme.colors.white};
 		margin-right: auto;
 		flex-direction: column;
-		height: 100vh;
 			@media ${device.laptop} {
 				display: none
 			}
@@ -62,23 +64,27 @@ const Sidebar = () => {
 	`
 
 
-    return(
+	return (
+		<Container>
+
+
 			<Wrapper>
 				<LogoContainer>
 					<Link to="/" >
-					
-							<Logo src={logoUrl} />
 
-						
+						<Logo src={logoUrl} />
+
+
 					</Link>
 				</LogoContainer>
 				<NavItem to="/reports">
 					<h6>Reports</h6>
 				</NavItem>
-				
-			</Wrapper>
 
-    );
+			</Wrapper>
+		</Container>
+
+	);
 };
 
 export default Sidebar;

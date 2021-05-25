@@ -138,7 +138,36 @@ app.get('/api/organisation', (req, res) => {
 		);
 	});
 });
+app.get('/api/login', (req, res) => {
+	pool.getConnection(function(err, connection) {
+		if (err) throw err; 
+		// const encryptedPassword = cryptr.encrypt(req.query.password);
 
+		connection.query
+		("SELECT * FROM reports WHERE report_id = ? AND report_pas sword = ?", [req.query.reportId, req.query.password ],
+		function (error, results) {
+			const dateAdded = results[0].date_added;
+			const decryptedReportDetails = cryptr.decrypt(results[0].report_details);
+			const decryptedReport = cryptr.decrypt(results[0].report);
+			const reportId = results[0].report_id;
+			const occurTime = results[0].occur_time;
+			const state = results[0].state;
+
+			res.send({
+				"dateAdded": dateAdded,
+				"reportDetails": decryptedReportDetails,
+				"report": decryptedReport,
+				"reportId": reportId,
+				"occurTime": occurTime,
+				"state": state
+				
+			})
+				connection.release();
+				if (error) throw error;
+			}
+		);
+	});
+});
 
 app.get('/api', (req, res) => {
 	res.send("API working");

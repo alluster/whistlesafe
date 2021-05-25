@@ -10,8 +10,6 @@ import { device } from '../device';
 import Button from '../Components/Button';
 import { AppContext } from '../context/Context';
 import Spinner from '../Components/Spinner';
-
-
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -20,6 +18,9 @@ import {
 	useParams
 } from "react-router-dom";
 import Container from '../Components/Container';
+const TopNav = React.lazy(() => import('../Components/TopNav'));
+const Sidebar = React.lazy(() => import('../Components/Sidebar'));
+
 
 const Input = styled.textarea`
 	height: 40px;
@@ -83,7 +84,7 @@ const Report = () => {
 	let { id } = useParams();
 	const socket = io(`${process.env.REACT_APP_API_URL}`, {
 		withCredentials: true,
-		
+
 	});
 	const GetMessages = async () => {
 		setIsLoading(true)
@@ -160,69 +161,74 @@ const Report = () => {
 
 
 	return (
-		<Container>
-			<Card>
-				<CardContent>
-					{
-						!isLoading ?
+		<div>
+			<TopNav />
+			<Sidebar />
+			<Container>
+				<Card>
+					<CardContent>
+						{
+							!isLoading ?
 
 
 
-							<div>
-								<h4 style={{ marginBottom: "30px" }} >Report ID: {report?.reportId}</h4>
-								{/* <h4 style={{marginBottom: "30px" }}>Password: {}</h4>  */}
+								<div>
+									<h4 style={{ marginBottom: "30px" }} >Report ID: {report?.reportId}</h4>
+									{/* <h4 style={{marginBottom: "30px" }}>Password: {}</h4>  */}
 
-								<form>
-									<InputGroup>
-										<Label>Time of reporting</Label>
-										<Input disabled type="text" rows="10" placeholder="Time of reporting" value={report?.dateAdded} />
-									</InputGroup>
-									<InputGroup>
-										<Label>Please describe your concern</Label>
-										<Input disabled type="text" rows="10" placeholder="Description" value={report?.report} />
-									</InputGroup>
-									<InputGroup>
-										<Label>When did this happen?</Label>
-										<Input disabled type="text" placeholder="Time" value={report?.occurTime} />
-									</InputGroup>
-									<InputGroup>
-										<Label>Please provide any important details</Label>
-										<Input disabled type="text" placeholder="Details" value={report?.reportDetails} />
-									</InputGroup>
-									<InputGroup>
-										<Input style={{ marginBottom: "20px" }} type="text" value={message} onChange={onUpdateMessage} />
-										<Button onClick={sendMessage}>Send Message</Button>
-									</InputGroup>
-									<h3>Messages</h3>
+									<form>
+										<InputGroup>
+											<Label>Time of reporting</Label>
+											<Input disabled type="text" rows="10" placeholder="Time of reporting" value={report?.dateAdded} />
+										</InputGroup>
+										<InputGroup>
+											<Label>Please describe your concern</Label>
+											<Input disabled type="text" rows="10" placeholder="Description" value={report?.report} />
+										</InputGroup>
+										<InputGroup>
+											<Label>When did this happen?</Label>
+											<Input disabled type="text" placeholder="Time" value={report?.occurTime} />
+										</InputGroup>
+										<InputGroup>
+											<Label>Please provide any important details</Label>
+											<Input disabled type="text" placeholder="Details" value={report?.reportDetails} />
+										</InputGroup>
+										<InputGroup>
+											<Input style={{ marginBottom: "20px" }} type="text" value={message} onChange={onUpdateMessage} />
+											<Button onClick={sendMessage}>Send Message</Button>
+										</InputGroup>
+										<h3>Messages</h3>
 
-									<InputGroup>
-										{receivedMessages.slice(0).reverse().map((item, index) => (
-											<div key={index}>
-												<p>{item.author}</p>
-												<p>{item.date}</p>
-												<Input disabled  value={item.message} type="text" />
+										<InputGroup>
+											{receivedMessages.slice(0).reverse().map((item, index) => (
+												<div key={index}>
+													<p>{item.author}</p>
+													<p>{item.date}</p>
+													<Input disabled value={item.message} type="text" />
 
-											</div>
-										))}
-									</InputGroup>
-
-
-
-
-								</form>
-							</div>
-							:
-							<Spinner />
-					}
+												</div>
+											))}
+										</InputGroup>
 
 
 
 
+									</form>
+								</div>
+								:
+								<Spinner />
+						}
 
-				</CardContent>
 
-			</Card>
-		</Container>
+
+
+
+					</CardContent>
+
+				</Card>
+			</Container>
+		</div>
+
 	);
 };
 

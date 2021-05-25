@@ -5,18 +5,20 @@ const GlobalStyle = createGlobalStyle`
     body, html {
         margin: 0px;
         padding: 0px;
-		max-width: 100% ;
-		min-height: 100vh;
+		max-width: 100%;
+		height: 100% !important;
 		font-family: 'Open Sans', sans-serif !important;
-		font-display: swap;
-		color: ${props => props.theme.colors.black};
-		hyphens: manual;
+		color: #252525;
 		text-rendering: optimizeLegibility;
-		background-color: ${props => props.theme.colors.background}
-		
+		background-color:#F7F7F7;
+		overflow: auto;
+
 	}
 
-    
+    #app {
+		height: 100%;
+		min-height: 100vh;
+	  }
     h1 {
 
         margin: 0px;
